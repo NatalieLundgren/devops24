@@ -1,0 +1,23 @@
+---
+- hosts: web
+  become: true
+  vars:
+    users:
+      - name: alovelace
+        groups: "wheel,audio,video"
+      - name: aturing
+        groups: "tape"
+      - name: edijkstra
+        groups: "tcpdump"
+      - name: ghopper
+        groups: "wheel,audio"
+  tasks:
+    - name: Ensure users exist
+      ansible.builtin.user:
+        name: "{{ item.name }}"
+        groups: "{{ item.groups }}"
+        append: yes
+        state: present
+      loop: "{{ users }}"
+
+
