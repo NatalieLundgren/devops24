@@ -1,0 +1,23 @@
+Fråga A:
+started/stopped are idempotent actions that will not run commands unless necessary.
+restarted will always bounce the service.
+reloaded will always reload.
+At least one of state and enabled are required.
+Note that reloaded will start the service if it is not already started, even if your chosen init system wouldn’t normally.
+Choices:
+"reloaded"
+"restarted"
+"started"
+"stopped"
+Man lägger till state: started unter enable: true
+name: Ensure nginx is started at boot
+      ansible.builtin.service:
+        name: nginx
+        enabled: true
+
+
+Fråga B:
+När man sätter become: true högst upp så gör den så att alla task körs med sudo på en gång. Man behöver alltså inte lägga till den vid varje task.
+
+Fråga C:
+Man ändrar orning för att vara säker på att weberver.yml stoppas innan den tas bort för annars kan det bli fel.
