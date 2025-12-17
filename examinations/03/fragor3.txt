@@ -1,0 +1,11 @@
+Skillnaden när man kör: ansible-playbook site.yml en andra gång är att det inte längre står changed.
+
+Fråga A:
+ansible.builtin.debug skriver ut meddelande och felsöker utan att ändra på något.
+
+Fråga B:
+ansible_facts skriver ut olika saker tex .nodename visar hostname eller .os_family visade i mittfall RedHat. Man kan ävwn få ut bla RAM-minne, nätverksinställningar och processor.
+Den kommer från modulen Gathering Facts.
+
+Fråga C:
+Man använder samma innehåll som finns i site.yml men ändrar state från present till abcent i uninstallfilen.na
