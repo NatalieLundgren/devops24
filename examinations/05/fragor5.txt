@@ -1,0 +1,28 @@
+Fråga A:
+The output from the playbook run contains something that looks suspiciously like JSON, and that contains a number of keys and values that come from the output of the Ansible module.
+
+What does the output look like the first time you run this playbook?
+TASK [Copy https.conf to nginx configuration directory] **************************************************************************************************
+changed: [192.168.121.132] => {"changed": true, "checksum": "4928f5d40694d15bf3e276596d47b8fc75544d59", "dest": "/etc/nginx/conf.d/https.conf", "gid": 0, "group": "root", "md5sum": "a3bb0c727d3e156afa3a11d78b406c83", "mode": "0644", "owner": "root", "secontext": "system_u:object_r:httpd_config_t:s0", "size": 465, "src": "/home/deploy/.ansible/tmp/ansible-tmp-1761724567.8881688-154700-53515986508289/source", "state": "file", "uid": 0}
+
+PLAY RECAP ***********************************************************************************************************************************************
+192.168.121.132            : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0  
+
+What does the output look like the second time you run this playbook?
+TASK [Copy https.conf to nginx configuration directory] **************************************************************************************************
+ok: [192.168.121.132] => {"changed": false, "checksum": "4928f5d40694d15bf3e276596d47b8fc75544d59", "dest": "/etc/nginx/conf.d/https.conf", "gid": 0, "group": "root", "mode": "0644", "owner": "root", "path": "/etc/nginx/conf.d/https.conf", "secontext": "system_u:object_r:httpd_config_t:s0", "size": 465, "state": "file", "uid": 0}
+
+PLAY RECAP ***********************************************************************************************************************************************
+192.168.121.132            : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+
+Fråga B:
+Lägger till en task i 05-web :
+
+    - name: Ensure nginx service is restarted
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
+
+Fråga C:
+Att Starta om tjänsten flera gånger än nödvändigt kan leda till onödiga driftstopp. Det går också emot principen att endast göra nödvändiga ändringar.
