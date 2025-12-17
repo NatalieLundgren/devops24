@@ -1,0 +1,11 @@
+Fråga A:
+
+    - name: Ensure MariaDB service is started and enabled
+      ansible.builtin.service:
+        name: mariadb
+        state: started
+        enabled: true
+
+Fråga B:
+För att verifiera att mariadb körs så kan man skriva in:
+sudo systemctl status mariadb
