@@ -1,0 +1,49 @@
+fråga A:
+ansible-inventory --list visar:
+{
+    "_meta": {
+        "hostvars": {
+            "192.168.121.132": {
+                "ansible_ssh_private_key_file": "/home/administator/devops24/lab_environment/deploy_key",
+                "ansible_user": "deploy"
+            },
+            "192.168.121.168": {
+                "ansible_ssh_private_key_file": "/home/administator/devops24/lab_environment/deploy_key",
+                "ansible_user": "deploy"
+            }
+        }
+    },
+    "all": {
+        "children": [
+            "ungrouped",
+            "db",
+            "web"
+        ]
+    },
+    "db": {
+        "hosts": [
+            "192.168.121.168"
+        ]
+    },
+    "web": {
+        "hosts": [
+            "192.168.121.132"
+        ]
+    }
+}
+
+Den visar vad man har i JSON format.
+
+Fråga B:
+ansible-inventory --graph
+@all:
+  |--@ungrouped:
+  |--@db:
+  |  |--192.168.121.168
+  |--@web:
+  |  |--192.168.121.132
+
+  Den visar en enklare översikt av grupper och värdar.
+
+  Fråga C:
+  ansible_connection=local gör att Ansible kör uppgifter direkt på den lokala maskinen istället för via SSH.
