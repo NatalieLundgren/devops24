@@ -1,0 +1,32 @@
+---
+  # PyMySQL behövs för att Ansible ska fungera med MariaDB
+  - name: Ensure MariaDB-server is installed.
+    ansible.builtin.package:
+        name: 
+        - mariadb-server
+        - python3-PyMySQL
+        state: present 
+
+    # För att den ska vara redo när man skapar databaser och använadre.
+  - name: Restart MariaDB to apply new configuration
+    ansible.builtin.service:
+      name: mariadb
+      enabled: true
+      state: started
+
+    # Skapas för att lagra data.
+    #använder unix-socket för att det körs lokalt på servern.
+  - name: Create a new database with name 'webappdb'
+    community.mysql.mysql_db:
+      name: webappdb
+      state: present
+      login_unix_socket: /var/lib/mysql/mysql.sock
+
+    # Skapar en användare för databasen istället för att använda root-användaren
+  - name: Create a new database user with name 'webappuser'
+    community.mysql.mysql_user:
+      name: webappuser
+      password: "{{ db_password }}" # Lagarar lösenordet i en variabel för bättre säkerhet
+      priv: "webappdb.*:ALL" #Ger Användaren fulla rättigheter till databasen 
+      state: present
+      login_unix_socket: /var/lib/mysql/mysql.sock
