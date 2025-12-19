@@ -1,0 +1,95 @@
+---
+#Jag gick in på CIS_AlmaLinux_OS_10_Benchmark_v1.0.0.pdf och gick igenom alternativ för lämpliga checks
+#Jag sökte på såna som var Level 1 kontroller för Level 2 är mer avancerade. sen kollade jag på Audit.
+#Jag la in ignore_errors: true på två stycken för jag märkte att när jag körde playbooken så försvann det
+#de andra taskens som kom efter dom.
+
+- name: Security Compliance Checks
+  hosts: all
+  tasks:
+    - name: Gather the package facts
+      ansible.builtin.package_facts:
+
+    - name: check for telnet-server
+      ansible.builtin.assert:
+        fail_msg: telnet-server package is installed
+        success_msg: telnet-server package is not installed
+        that: "'telnet-server' not in ansible_facts.packages"
+
+    - name: Check if SELinux is installed 
+      ansible.builtin.assert:
+        that: "'libselinux' in ansible_facts.packages"
+        fail_msg: " SELinux not installed"
+        success_msg: "SELinux installed"
+
+    - name: Ensure tftp client is not installed
+      ansible.builtin.assert:
+        that: "'tftp' not in ansible_facts.packages"
+        fail_msg: "tftp is installed. FAIL!"
+        success_msg: "tftp is not installed. Great!"
+
+    - name: Ensure time synchronization is in use
+      ansible.builtin.assert:
+        that: "'chrony' in ansible_facts.packages"
+        fail_msg: "chrony is not installed.. fail"
+        success_msg: "chrony is installed. Yippie!"
+
+    - name: Ensure sudo is installed
+      ansible.builtin.assert:
+        that: "'sudo' in ansible_facts.packages"
+        fail_msg: "sudo is not installed.. fail"
+        success_msg: "sudo is installed. Yippie!"
+
+    - name: Ensure firewalld is installed
+      ansible.builtin.assert:
+        that: "'firewalld' in ansible_facts.packages"
+        fail_msg: "firewalld is NOT installed "
+        success_msg: "firewalld is installed "
+      ignore_errors: true
+
+    - name: Ensure freevxfs kernel module is not available 
+      ansible.builtin.assert:
+        that: "'freevxfs' not in ansible_facts.packages"
+        fail_msg: "freevxfs is installed.. fail"
+        success_msg: "freevxfs not installed. Great!"
+
+    - name:  Ensure SETroubleshoot is not installed 
+      ansible.builtin.assert:
+        that: "'setroubleshoot' not in ansible_facts.packages"
+        fail_msg: "setroubleshoot is installed.. not good"
+        success_msg: "setroubleshoot not installed. Good!"
+
+    - name: Ensure AIDE is installed
+      ansible.builtin.assert:
+        that: "'aide' in ansible_facts.packages"
+        fail_msg: "AIDE is NOT installed"
+        success_msg: "AIDE is installed. Bravo!"
+      ignore_errors: true 
+
+    - name:  Ensure hfsplus kernel module is not available
+      ansible.builtin.assert:
+        that: "'hfsplus' not in ansible_facts.packages"
+        fail_msg: "hfsplus is installed.. bad"
+        success_msg: "hfsplus not installed. Good."
+
+    - name: Ensure the MCS Translation Service (mcstrans) is not installed
+      ansible.builtin.assert:
+        that: "'mcstrans' not in ansible_facts.packages"
+        fail_msg: " mcstrans is installed. Bad! "
+        success_msg: "mcstrans is NOT installed. Bravo! "
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
