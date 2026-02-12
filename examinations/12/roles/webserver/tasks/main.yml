@@ -1,46 +1,55 @@
 #från uppgift 10
 ---
+
+# Skapar katalogen conf.d om den inte finns
+- name: Ensure nginx conf.d directory exists
+  ansible.builtin.file:
+    path: /etc/nginx/conf.d
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
     #Aktiverar HTTPS-inställningar för webbservern
-  - name: Copy https.conf to nginx conf.d directory
-    ansible.builtin.copy:
-      src: https.conf
-      dest: /etc/nginx/conf.d/https.conf
-      owner: root
-      group: root
-      mode: '0644'
-    register: nginx_file
-    notify: Reload nginx #Om filen ändras så kommer den reloadas automatiskt
+- name: Copy https.conf to nginx conf.d directory
+  ansible.builtin.copy:
+    src: https.conf
+    dest: /etc/nginx/conf.d/https.conf
+    owner: root
+    group: root
+    mode: '0644'
+  register: nginx_file
+  notify: Reload nginx #Om filen ändras så kommer den reloadas automatiskt
 
     # Skapar Nginx-konfiguration med template för bättre flexibilitet och lättare underhåll
-  - name: Ensure the nginx configuration is updated for example.internal
-    ansible.builtin.template:
-      src: example.internal.conf.j2
-      dest: /etc/nginx/conf.d/example.internal.conf
-      owner: root
-      group: root
-      mode: '0644'
-    register: nginx_conf
-    notify: Reload nginx
+- name: Ensure the nginx configuration is updated for example.internal
+  ansible.builtin.template:
+    src: example.internal.conf.j2
+    dest: /etc/nginx/conf.d/example.internal.conf
+    owner: root
+    group: root
+    mode: '0644'
+  register: nginx_conf
+  notify: Reload nginx
 
     # Skapar katalog för webbplatsen så att Nginx kan läsa och leverara innehållet
-  - name: Create directory structure for example.internal
-    ansible.builtin.file:
-      path: /var/www/example.internal/html
-      state: directory
-      owner: nginx
-      group: nginx
-      mode: '0755'
-      recurse: yes
-      setype: httpd_sys_content_t
+- name: Create directory structure for example.internal
+  ansible.builtin.file:
+    path: /var/www/example.internal/html
+    state: directory
+    owner: nginx
+    group: nginx
+    mode: '0755'
+    recurse: yes
+    setype: httpd_sys_content_t
 
-    # Laddar upp webbplatsens startsida med rätt rättigheter så att Nginx kan visa den
-  - name: Upload index.html to website directory
-    ansible.builtin.copy:
-      src: index.html
-      dest: /var/www/example.internal/html/index.html
-      owner: nginx
-      group: nginx
-      mode: '0644'
-      setype: httpd_sys_content_t
-    register: index_file 
+  # Laddar upp webbplatsens startsida med rätt rättigheter så att Nginx kan visa den
+- name: Upload index.html to website directory
+  ansible.builtin.copy:
+    src: index.html
+    dest: /var/www/example.internal/html/index.html
+    owner: nginx
+    group: nginx
+    mode: '0644'
+    setype: httpd_sys_content_t
+  register: index_file 
 
