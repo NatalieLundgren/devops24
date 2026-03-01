@@ -1,6 +1,10 @@
 #från uppgift 10
 ---
 
+- name: Ensure nginx installed
+  ansible.builtin.package:
+    name: nginx
+    state: latest
 # Skapar katalogen conf.d om den inte finns
 - name: Ensure nginx conf.d directory exists
   ansible.builtin.file:
