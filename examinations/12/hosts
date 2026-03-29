@@ -1,8 +1,9 @@
 [all:vars]
-ansible_connection=local
+ansible_user=deploy
+ansible_ssh_private_key_file=deploy_key
 
 [db]
-localhost
+dbserver ansible_host=192.168.56.11
 
 [web]
-localhost
+webserver ansible_host=192.168.56.10
